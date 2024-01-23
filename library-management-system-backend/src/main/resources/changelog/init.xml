@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="anupam.krishna" id="book_review_table">
+        <sql splitStatements="false">
+            DROP TABLE IF EXISTS book;
+            CREATE TABLE book (
+                                  id SERIAL NOT NULL,
+                                  title VARCHAR(255),
+                                  author VARCHAR(255),
+                                  description TEXT,
+                                  copies INT,
+            copies_available INT,
+            category VARCHAR(100),
+            img VARCHAR(255),
+            PRIMARY KEY (id)
+        );
+
+            DROP TABLE IF EXISTS review;
+            CREATE TABLE review (
+                                    id SERIAL PRIMARY KEY,
+                                    user_email VARCHAR(255),
+                                    date DATE,
+                                    rating INT,
+            book_id INT,
+            review_description TEXT,
+            FOREIGN KEY (book_id) REFERENCES book(id) ON DELETE CASCADE
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="insert_data" author="anupam.krishna">
+        <sql splitStatements="false">
+            -- Insert data into the 'book' table
+            INSERT INTO book (title, author, description, copies, copies_available, category, img)
+            VALUES
+                ('Book Title 1', 'Author 1', 'Description 1', 10, 10, 'Category 1', 'img1.jpg'),
+                ('Book Title 2', 'Author 2', 'Description 2', 15, 15, 'Category 2', 'img2.jpg'),
+                ('Book Title 3', 'Author 3', 'Description 3', 20, 20, 'Category 3', 'img3.jpg');
+
+-- Insert data into the 'review' table
+            INSERT INTO review (user_email, date, rating, book_id, review_description)
+            VALUES
+                ('user1@example.com', '2023-01-01', 5, 1, 'Great book!'),
+                ('user2@example.com', '2023-01-02', 4, 2, 'Enjoyed reading it.'),
+                ('user3@example.com', '2023-01-03', 3, 3, 'Not bad, but could be better');
+
+        </sql>
+    </changeSet>
+    <changeSet id="alter-table" author="anupam">
+        <sql splitStatements="false">
+            ALTER TABLE book ALTER COLUMN author SET NOT NULL;
+        </sql>
+    </changeSet>
+
+
+
+</databaseChangeLog>
